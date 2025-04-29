@@ -11,16 +11,9 @@ DROP TABLE IF EXISTS ambiente CASCADE;
 DROP TABLE IF EXISTS distrito CASCADE;
 
 CREATE TABLE distrito (
-  nome_distrito VARCHAR(30) PRIMARY KEY,
-  dre            VARCHAR(10) NOT NULL,
-  subpref        VARCHAR(20) NOT NULL
-);
-
-CREATE TABLE ambiente (
-  cod_amb   INTEGER PRIMARY KEY,
-  desc_amb  VARCHAR(50) NOT NULL,
-  capacidade VARCHAR(50) NOT NULL,
-  metragem  VARCHAR(50) NOT NULL
+  nome_distrito VARCHAR(50) PRIMARY KEY,
+  dre            VARCHAR(50) NOT NULL,
+  subpref        VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE osc (
@@ -34,45 +27,51 @@ CREATE TABLE parceria (
   valor_mensal       DOUBLE PRECISION,
   verba_locacao      DOUBLE PRECISION,
   valor_mensal_iptu  DOUBLE PRECISION,
-  data_inicio        DATE NOT NULL,
-  data_termino       DATE NOT NULL,
+  data_inicio        DATE,
+  data_termino       DATE,
   CONSTRAINT fk_parceria_osc
     FOREIGN KEY (osc_cnpj) REFERENCES osc(cnpj)
 );
 
 CREATE TABLE escola (
-  cod_inep        INTEGER PRIMARY KEY,
-  nome_distrito   VARCHAR(30) NOT NULL,
-  cod_amb         INTEGER NOT NULL,
+  cod_inep        BIGINT PRIMARY KEY,
+  nome_distrito   VARCHAR(50) NOT NULL,
   protocolo       VARCHAR(50),
-  tipo_esc        VARCHAR(10)  NOT NULL,
+  tipo_esc        VARCHAR(50)  NOT NULL,
   nome_esc        VARCHAR(50)  NOT NULL,
-  rede            VARCHAR(5)   NOT NULL,
+  rede            VARCHAR(50)   NOT NULL,
   CONSTRAINT fk_escola_distrito
     FOREIGN KEY (nome_distrito) REFERENCES distrito(nome_distrito),
-  CONSTRAINT fk_escola_ambiente
-    FOREIGN KEY (cod_amb)        REFERENCES ambiente(cod_amb),
   CONSTRAINT fk_escola_parceria
     FOREIGN KEY (protocolo)      REFERENCES parceria(protocolo)
 );
 
+CREATE TABLE ambiente (
+  cod_amb   BIGINT PRIMARY KEY,
+  cod_inep BIGINT NOT NULL,
+  desc_amb  VARCHAR(50) NOT NULL,
+  capacidade VARCHAR(50),
+  metragem  VARCHAR(50),
+  CONSTRAINT fk_cod_inep
+    FOREIGN KEY (cod_inep) REFERENCES escola(cod_inep)
+);
+
 CREATE TABLE serie (
-  cod_serie      INTEGER PRIMARY KEY,
-  descricao_serie VARCHAR(10) NOT NULL,
-  modalidade     VARCHAR(30) NOT NULL
+  cod_serie      BIGINT PRIMARY KEY,
+  descricao_serie VARCHAR(50) NOT NULL,
+  modalidade     VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE turno (
-  cod_turno      INTEGER PRIMARY KEY,
-  descricao_turno VARCHAR(10) NOT NULL,
-  periodo        VARCHAR(10) NOT NULL
+  cod_turno      BIGINT PRIMARY KEY,
+  descricao_turno VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE turma (
-  nome_turma     INTEGER PRIMARY KEY,
-  cd_inep_escola INTEGER NOT NULL,
-  cod_turno      INTEGER NOT NULL,
-  cod_serie      INTEGER NOT NULL,
+  nome_turma     VARCHAR(50) PRIMARY KEY,
+  cd_inep_escola BIGINT NOT NULL,
+  cod_turno      BIGINT NOT NULL,
+  cod_serie      BIGINT NOT NULL,
   matriculados   INTEGER NOT NULL,
   vagas          INTEGER NOT NULL,
   tipo_turma     VARCHAR(50) NOT NULL,
@@ -87,8 +86,8 @@ CREATE TABLE turma (
 );
 
 CREATE TABLE aluno (
-  id_aluno    INTEGER PRIMARY KEY,
-  nome_turma  INTEGER NOT NULL,
+  id_aluno    BIGINT PRIMARY KEY,
+  nome_turma  VARCHAR(50) NOT NULL,
   nee         VARCHAR(50),
   raca_cor    VARCHAR(50),
   sexo        CHAR NOT NULL,
@@ -99,16 +98,17 @@ CREATE TABLE aluno (
 );
 
 CREATE TABLE materia (
-  cd_materia  INTEGER PRIMARY KEY,
+  cd_materia  BIGINT PRIMARY KEY,
   data_inicio DATE NOT NULL,
   data_final  DATE NOT NULL
 );
 
 CREATE TABLE situacao (
-  id_aluno       INTEGER NOT NULL,
-  cd_materia     INTEGER NOT NULL,
+  id_situacao BIGINT PRIMARY KEY,
+  id_aluno       BIGINT NOT NULL,
+  cd_materia     BIGINT NOT NULL,
   desc_situacao  VARCHAR(50) NOT NULL,
-  data_coleta    DATE NOT NULL,
+  data_coleta    DATE,
   CONSTRAINT fk_situacao_aluno
     FOREIGN KEY (id_aluno)    REFERENCES aluno(id_aluno),
   CONSTRAINT fk_situacao_materia
