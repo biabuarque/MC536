@@ -34,12 +34,12 @@ CREATE TABLE parceria (
 );
 
 CREATE TABLE escola (
-  cod_inep        BIGINT PRIMARY KEY,
-  nome_distrito   VARCHAR(50) NOT NULL,
-  protocolo       VARCHAR(50),
-  tipo_esc        VARCHAR(50)  NOT NULL,
-  nome_esc        VARCHAR(50)  NOT NULL,
-  rede            VARCHAR(50)   NOT NULL,
+  cod_inep        BIGINT,
+  nome_distrito   VARCHAR(100) NOT NULL,
+  protocolo       VARCHAR(100),
+  tipo_esc        VARCHAR(100)  NOT NULL,
+  nome_esc        VARCHAR(100)  PRIMARY KEY,
+  rede            VARCHAR(100)   NOT NULL,
   CONSTRAINT fk_escola_distrito
     FOREIGN KEY (nome_distrito) REFERENCES distrito(nome_distrito),
   CONSTRAINT fk_escola_parceria
@@ -47,13 +47,13 @@ CREATE TABLE escola (
 );
 
 CREATE TABLE ambiente (
-  cod_amb   BIGINT PRIMARY KEY,
-  cod_inep BIGINT NOT NULL,
-  desc_amb  VARCHAR(50) NOT NULL,
+  cod_amb    BIGINT PRIMARY KEY,
+  nome_esc   VARCHAR(100) NOT NULL,
+  desc_amb   VARCHAR(50) NOT NULL,
   capacidade VARCHAR(50),
-  metragem  VARCHAR(50),
-  CONSTRAINT fk_cod_inep
-    FOREIGN KEY (cod_inep) REFERENCES escola(cod_inep)
+  metragem   VARCHAR(50),
+  CONSTRAINT fk_nome_esc
+    FOREIGN KEY (nome_esc) REFERENCES escola(nome_esc)
 );
 
 CREATE TABLE serie (
@@ -69,7 +69,7 @@ CREATE TABLE turno (
 
 CREATE TABLE turma (
   nome_turma     VARCHAR(50) PRIMARY KEY,
-  cd_inep_escola BIGINT NOT NULL,
+  nome_esc       VARCHAR(100) NOT NULL,
   cod_turno      BIGINT NOT NULL,
   cod_serie      BIGINT NOT NULL,
   matriculados   INTEGER NOT NULL,
@@ -78,7 +78,7 @@ CREATE TABLE turma (
   etapa_ensino   VARCHAR(50) NOT NULL,
   ciclo_ensino   VARCHAR(50) NOT NULL,
   CONSTRAINT fk_turma_escola
-    FOREIGN KEY (cd_inep_escola) REFERENCES escola(cod_inep),
+    FOREIGN KEY (nome_esc) REFERENCES escola(nome_esc),
   CONSTRAINT fk_turma_turno
     FOREIGN KEY (cod_turno)       REFERENCES turno(cod_turno),
   CONSTRAINT fk_turma_serie
