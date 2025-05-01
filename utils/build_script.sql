@@ -74,9 +74,9 @@ CREATE TABLE turma (
   cod_serie      BIGINT NOT NULL,
   matriculados   INTEGER NOT NULL,
   vagas          INTEGER NOT NULL,
-  tipo_turma     VARCHAR(50) NOT NULL,
-  etapa_ensino   VARCHAR(50) NOT NULL,
-  ciclo_ensino   VARCHAR(50) NOT NULL,
+  tipo_turma     VARCHAR(50),
+  etapa_ensino   VARCHAR(50),
+  ciclo_ensino   VARCHAR(50),
   CONSTRAINT fk_turma_escola
     FOREIGN KEY (nome_esc) REFERENCES escola(nome_esc),
   CONSTRAINT fk_turma_turno
