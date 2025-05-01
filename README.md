@@ -42,10 +42,9 @@ At its core, our work advances **United Nations Sustainable Development Goal 4: 
    ```bash
    pip install notebook pandas psycopg2-binary
    ```
-3. **Build the database**  
-   ```bash
-   psql -U your_user -d your_db -f utils/build_script.sql
-   ```
+3. **Create the server**  
+
+   After that, replace server data at `db_building.ipynb` and `example_queries.ipynb`
 4. **Run notebooks**  
    ```bash
    jupyter notebook
