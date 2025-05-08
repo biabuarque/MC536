@@ -92,7 +92,7 @@ CREATE TABLE aluno (
   raca_cor    VARCHAR(50),
   sexo        CHAR NOT NULL,
   pais_nasc   VARCHAR(100) NOT NULL,
-  nascimento  DATE NOT NULL,
+  nascimento  DATE,
   CONSTRAINT fk_aluno_turma
     FOREIGN KEY (nome_turma) REFERENCES turma(nome_turma)
 );
