@@ -68,6 +68,7 @@ CREATE TABLE turno (
 );
 
 CREATE TABLE turma (
+  id_turma     BIGSERIAL PRIMARY KEY,
   nome_turma     VARCHAR(50) NOT NULL,
   nome_esc       VARCHAR(100) NOT NULL,
   desc_turno      VARCHAR(50) NOT NULL,
@@ -79,29 +80,28 @@ CREATE TABLE turma (
   tipo_turma     VARCHAR(50),
   etapa_ensino   VARCHAR(50),
   ciclo_ensino   VARCHAR(50),
+  CONSTRAINT turma_natural_key UNIQUE (nome_turma, nome_esc, desc_turno, desc_serie),
   CONSTRAINT fk_turma_escola
     FOREIGN KEY (nome_esc) REFERENCES escola(nome_esc),
   CONSTRAINT fk_turma_turno
     FOREIGN KEY (cod_turno)       REFERENCES turno(cod_turno),
   CONSTRAINT fk_turma_serie
-    FOREIGN KEY (cod_serie)       REFERENCES serie(cod_serie),
-  PRIMARY KEY (nome_turma, nome_esc, desc_turno, desc_serie)
+    FOREIGN KEY (cod_serie)       REFERENCES serie(cod_serie)
 );
 
 CREATE TABLE aluno (
-  id_aluno    BIGINT NOT NULL,
-  nome_turma  VARCHAR(50) NOT NULL,
-  nome_esc   VARCHAR(100) NOT NULL,
-  desc_turno  VARCHAR(50) NOT NULL,
-  desc_serie  VARCHAR(50) NOT NULL,
+  id_aluno    BIGSERIAL PRIMARY KEY,
+  cadastro    BIGINT NOT NULL,
+  id_turma    BIGINT NOT NULL,
   nee         VARCHAR(50),
   raca_cor    VARCHAR(50),
   sexo        CHAR NOT NULL,
   pais_nasc   VARCHAR(100) NOT NULL,
   nascimento  DATE,
+  CONSTRAINT aluno_natural_key UNIQUE (cadastro, id_turma),
+  CONSTRAINT aluno_artificial_key UNIQUE (id_aluno, id_turma),
   CONSTRAINT fk_aluno_turma
-    FOREIGN KEY (nome_turma, nome_esc, desc_turno, desc_serie) REFERENCES turma(nome_turma, nome_esc, desc_turno, desc_serie),
-  PRIMARY KEY (id_aluno, nome_turma, nome_esc, desc_turno, desc_serie)
+  FOREIGN KEY (id_turma) REFERENCES turma(id_turma)
 );
 
 CREATE TABLE materia (
@@ -111,17 +111,14 @@ CREATE TABLE materia (
 );
 
 CREATE TABLE situacao (
-  id_situacao BIGINT PRIMARY KEY,
+  id_situacao BIGSERIAL PRIMARY KEY,
   id_aluno    BIGINT NOT NULL,
-  nome_turma  VARCHAR(50) NOT NULL,
-  nome_esc   VARCHAR(100) NOT NULL,
-  desc_turno  VARCHAR(50) NOT NULL,
-  desc_serie  VARCHAR(50) NOT NULL,
+  id_turma   BIGINT NOT NULL,
   cd_materia     BIGINT NOT NULL,
   desc_situacao  VARCHAR(50) NOT NULL,
   data_coleta    DATE,
   CONSTRAINT fk_situacao_aluno
-    FOREIGN KEY (id_aluno, nome_turma, nome_esc, desc_turno, desc_serie)    REFERENCES aluno(id_aluno, nome_turma, nome_esc, desc_turno, desc_serie),
+    FOREIGN KEY (id_aluno, id_turma)    REFERENCES aluno(id_aluno, id_turma),
   CONSTRAINT fk_situacao_materia
     FOREIGN KEY (cd_materia)  REFERENCES materia(cd_materia)
 );
